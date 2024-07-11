@@ -1,0 +1,3 @@
+auth:
+    consumer_key: # paste it from your application settings on Twitter Developer Portal
+    consumer_key_secret: # paste it from your application settings on Twitter Developer Portal
