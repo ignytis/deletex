@@ -6,9 +6,9 @@ import (
 	"github.com/integrii/flaggy"
 
 	likes_delete_using_api_list "github.com/ignytis/deletex/commands/likes/delete_using_api_list"
-	"github.com/ignytis/deletex/commands/tweets/delete_using_csv"
+	"github.com/ignytis/deletex/commands/tweets/delete_using_jsonl"
 	"github.com/ignytis/deletex/commands/tweets/dump_to_jsonl"
-	"github.com/ignytis/deletex/commands/tweets/to_delete_list_from_jsonl"
+	"github.com/ignytis/deletex/commands/tweets/filter_jsonl"
 	"github.com/ignytis/deletex/system/config"
 )
 
@@ -31,10 +31,10 @@ func main() {
 	subcommandTweetsDumpToJsonl := dump_to_jsonl.New(&inputFile, &outputFile)
 	flaggy.AttachSubcommand(subcommandTweetsDumpToJsonl, 1)
 
-	subcommandTweetsDeleteUsingCsv := delete_using_csv.New(&inputFile)
-	flaggy.AttachSubcommand(subcommandTweetsDeleteUsingCsv, 1)
+	subcommandTweetsDeleteUsingJsonl := delete_using_jsonl.New(&inputFile)
+	flaggy.AttachSubcommand(subcommandTweetsDeleteUsingJsonl, 1)
 
-	subcommandTweetsToDeleteListFromJsonl := to_delete_list_from_jsonl.New(&inputFile, &outputFile, &expression)
+	subcommandTweetsToDeleteListFromJsonl := filter_jsonl.New(&inputFile, &outputFile, &expression)
 	flaggy.AttachSubcommand(subcommandTweetsToDeleteListFromJsonl, 1)
 
 	flaggy.Parse()
@@ -44,10 +44,10 @@ func main() {
 		likes_delete_using_api_list.MustRun()
 	} else if subcommandTweetsDumpToJsonl.Used {
 		dump_to_jsonl.MustRun(inputFile, outputFile)
-	} else if subcommandTweetsDeleteUsingCsv.Used {
-		delete_using_csv.MustRun(inputFile)
+	} else if subcommandTweetsDeleteUsingJsonl.Used {
+		delete_using_jsonl.MustRun(inputFile)
 	} else if subcommandTweetsToDeleteListFromJsonl.Used {
-		to_delete_list_from_jsonl.MustRun(inputFile, outputFile, expression)
+		filter_jsonl.MustRun(inputFile, outputFile, expression)
 	}
 
 	log.Println("Done.")

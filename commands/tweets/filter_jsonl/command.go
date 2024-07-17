@@ -1,4 +1,4 @@
-package to_delete_list_from_jsonl
+package filter_jsonl
 
 import (
 	"bufio"
@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/ignytis/deletex/types"
 	"github.com/knetic/govaluate"
 )
 
@@ -37,7 +38,7 @@ func MustRun(inputFile string, outputFile string, expr string) {
 	for scanner.Scan() {
 		line := scanner.Text()
 
-		var record Record
+		var record types.Record
 		err := json.Unmarshal([]byte(line), &record)
 		if err != nil {
 			log.Fatal("Unable to read marshal a line: "+line+". ", err)
@@ -58,7 +59,7 @@ func MustRun(inputFile string, outputFile string, expr string) {
 		toDelete := toDeleteI.(bool)
 
 		if toDelete {
-			writer.WriteString(record.Tweet.Id + "\n")
+			writer.WriteString(line + "\n")
 		}
 		writer.Flush()
 	}

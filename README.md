@@ -25,39 +25,35 @@ __Common parameters__
 ### A typical workflow
 - Register a client Twitter app at https://developer.twitter.com, obtain consumer API keys, save them to [config.yaml](config.example.yaml). Note: it's NOT needed if you would like just to generate a list of tweets to delete without actual deletion; Twitter credentials are needed for API calls.
 - Generate and download a twitter archive: [Link](https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive)
-- Convert the `data/tweet.json` file from arctive to JSON Lines format
-- Generate a list of tweets to delete from JSON Lines file by filtering tweets
-- Delete tweets using a list file
+- Convert the `data/tweets.js` file in arctive from Javascript to JSON Lines format
+- Filter the JSON Lines file using expressions (see below)
+- Delete tweets using the filtered JSON lines file
 
-### Conversion of Javascript tweet dump file into JSON Lines
+### 1 Convert of Javascript tweet dump file into JSON Lines
 
 Twitter provides dumps as JavaScript files which are inapproptiate for analysis and filtering of records. This command converts the original JavaScript file into [JSON Lines format](https://jsonlines.org/).
 
 ```bash
 deletex tweets:dump:to_jsonl \
     -i /home/john/somefolder/twitter_dump/data/tweet.js \
-    -o /home/john/somefolder/twitter_dump_processed/tweets.js
+    -o /home/john/somefolder/twitter_dump_processed/tweets.json
 ```
 
-### Producing a list of tweets to delete by filtering the JSON Lines file
+### 2. Filter the JSON Lines file
 
 ```bash
-deletex tweets:to_delete_list:from_jsonl \
-    -i /home/john/somefolder/twitter_dump/tweets.json \
-    -o /home/john/somefolder/twitter_dump/todo_delete.txt \
+deletex tweets:jsonl:filter \
+    -i /home/john/somefolder/twitter_dump_processed/tweets.json \
+    -o /home/john/somefolder/twitter_dump_processed/tweets.filtered.json \
     -e "created_time >= '2022-01-01 00:00:00' && created_time < '2022-02-01 00:00:00'"
 ```
 
-### Deletion of tweets using CSV file
-
-__Parameters__
-
-- -i / --input-file - path to CSV file where IDs of tweets to delete are listed. Each line contains a single column which is tweet ID. No CSV header. _Note: it was probably a bad idea to mention the CSV format in this command, because records are not actually comma-separated :D Probably this name will be changed later._
+### 3. Delete tweets using the filtered JSON Lines file
 
 ```bash
 deletex tweets:delete:using_csv \
     -c $PWD/.local/config.yaml \
-    -i /home/john/somefolder/tweets_to_delete.csv
+    -i /home/john/somefolder/twitter_dump_processed/tweets.filtered.json
 ```
 
 ## Filtering expressions

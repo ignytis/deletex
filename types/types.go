@@ -1,4 +1,4 @@
-package to_delete_list_from_jsonl
+package types
 
 import (
 	"log"
@@ -19,8 +19,6 @@ func (t Tweet) CreatedAt() time.Time {
 	if err != nil {
 		log.Fatal("Failed to convert the Creted At param '"+t.CreatedAtString+"' to time: ", err)
 	}
-
-	timeT.Format("2006-01-02 15:04:05")
 
 	return timeT
 }
